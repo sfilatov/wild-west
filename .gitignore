@@ -2,3 +2,6 @@
 bin
 gen
 .project
+.classpath
+.idea
+*.iml
