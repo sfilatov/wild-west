@@ -14,8 +14,9 @@ import android.util.Log;
 
 import com.iwildwest.R;
 
-public final class SoundPoolSoundManager implements SoundManager{
-	private static final String TAG = "SoundPoolSoundManager";
+public final class SoundPoolSoundManager implements SoundManager {
+
+	private static final String TAG = SoundPoolSoundManager.class.toString();
 
 	private static final int SOUNDPOOL_STREAMS = 10;
 
@@ -63,10 +64,9 @@ public final class SoundPoolSoundManager implements SoundManager{
 		if (soundPool != null) {
 			AudioManager mgr = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
 			int streamVolume = mgr.getStreamVolume(AudioManager.STREAM_MUSIC);
+
 			Integer soundId = soundPoolMap.get(sound);
-			if (soundId != null) {
-				soundPool.play(soundId, streamVolume, streamVolume, 1, 0, 1f);
-			}
+			if (soundId != null) soundPool.play(soundId, streamVolume, streamVolume, 1, 0, 1f);
 		}
 	}
 	
@@ -82,6 +82,16 @@ public final class SoundPoolSoundManager implements SoundManager{
 	public void setEnabled(boolean enabled) {
 		this.enabled = enabled;
 	}
+
+    public void on(){
+        this.enabled = true;
+        init();
+    }
+
+    public void off(){
+        this.enabled = false;
+        release();
+    }
 	
 	private SortedMap<Integer, Integer> loadRawConstants() {
 		SortedMap<Integer, Integer> map = new TreeMap<Integer, Integer>();
@@ -92,14 +102,13 @@ public final class SoundPoolSoundManager implements SoundManager{
 		
 			int modifiers = f.getModifiers();
 			
-			if (Modifier.isPublic(modifiers) && Modifier.isStatic(modifiers)
-					&& f.getType().equals(Integer.TYPE)) {
+			if (Modifier.isPublic(modifiers) && Modifier.isStatic(modifiers) && f.getType().equals(Integer.TYPE)) {
 
 				try {
 					int value = f.getInt(null); 
 					map.put(value, soundPool.load(context, value, 1));
 				} catch (Exception error) {
-					Log.e(TAG, "Error accesing constants");
+					Log.e(TAG, "Error accessing constants");
 				}
 			}
 		}

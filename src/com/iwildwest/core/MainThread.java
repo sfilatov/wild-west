@@ -99,8 +99,11 @@ public final class MainThread extends AbstractAnimationThread implements LevelLi
 		}
 		
 		if (isSoundZone(eventX, eventY)) {
-			soundManager.setEnabled(!soundManager.isEnabled());
-			soundButton.setEnabled(soundManager.isEnabled());
+            if (soundManager.isEnabled()) {
+                soundManager.off();
+            } else {
+                soundManager.on();
+            }
 			return true;
 		}
 		

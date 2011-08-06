@@ -29,7 +29,7 @@ public abstract class AbstractAnimationThread extends Thread implements Animatio
 			doCanvasDraw();
 //			Log.i("{k.Perfomance}Main thread", "Run draw ended:" + System.currentTimeMillis());
 			
-			doSound();
+//			doSound();
 
 //			Log.i("{k.Perfomance}Main thread", "Run end:" + System.currentTimeMillis());
 			try {

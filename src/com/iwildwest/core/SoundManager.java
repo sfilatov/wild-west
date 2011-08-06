@@ -28,5 +28,9 @@ public interface SoundManager {
 	 */
 	public void setEnabled(boolean enabled);
 
+    public void on();
+
+    public void off();
+
 	public boolean isEnabled();
 }

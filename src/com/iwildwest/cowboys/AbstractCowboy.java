@@ -1,14 +1,13 @@
 package com.iwildwest.cowboys;
 
-import java.util.TreeMap;
-
-import com.iwildwest.core.PictureManager;
-import com.iwildwest.core.SoundManager;
-
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Rect;
+import com.iwildwest.core.PictureManager;
+import com.iwildwest.core.SoundManager;
+
+import java.util.TreeMap;
 
 public class AbstractCowboy implements Cowboy {
 
