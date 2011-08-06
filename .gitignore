@@ -3,5 +3,9 @@ bin
 gen
 .project
 .classpath
+.settings
 .idea
 *.iml
+*.ipr
+*.iws
+out
