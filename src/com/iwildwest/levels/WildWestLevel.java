@@ -9,7 +9,7 @@ import android.view.MotionEvent;
 
 import com.iwildwest.core.SoundManager;
 import com.iwildwest.cowboys.Cowboy;
-import com.iwildwest.cowboys.CowboysCreator;
+import com.iwildwest.cowboys.Cowboys;
 import com.iwildwest.cowboys.State;
 
 public abstract class WildWestLevel implements Level {
@@ -25,8 +25,8 @@ public abstract class WildWestLevel implements Level {
     protected long elapsedTime = -1;
 	protected long lastAdded = -1;
 
-	protected CowboysCreator cowboysCreator;
-	protected Cowboy[] cowboys;
+	protected Cowboys cowboys;
+	protected Cowboy[] cowboysArray;
 	protected int cowboysAtLevel = 0;
 	protected int cowboysAlreadyWereAdded = 0;
 	
@@ -40,9 +40,9 @@ public abstract class WildWestLevel implements Level {
 		this(listener, null);
 	}
 	
-	public WildWestLevel(LevelListener listener, CowboysCreator cowboysCreator) {
+	public WildWestLevel(LevelListener listener, Cowboys cowboys) {
 		this.listener = listener;
-		this.cowboysCreator = cowboysCreator;
+		this.cowboys = cowboys;
 		
 		killZones = getKillZones();
 		
@@ -60,7 +60,7 @@ public abstract class WildWestLevel implements Level {
 	
 	protected abstract Rect[] getKillZones();
 	
-	public void setTouchEvents(Collection<MotionEvent> touchEvents){
+	public void onTouchEvents(Collection<MotionEvent> touchEvents){
 		this.touchEvents.addAll(touchEvents);
 	}
 	
@@ -82,8 +82,8 @@ public abstract class WildWestLevel implements Level {
 		
 		for (MotionEvent event : touchEvents) {
 			for (int i = 0; i < killZones.length; i++) {
-				if (killZones[i].contains((int)event.getX(), (int)event.getY()) && cowboys[i] != null) {
-					cowboys[i].setState(State.DEAD_ANIMATION_STATE, currentTime);
+				if (killZones[i].contains((int)event.getX(), (int)event.getY()) && cowboysArray[i] != null) {
+					cowboysArray[i].setState(State.DEAD_ANIMATION_STATE, currentTime);
 					killEvents.add(event);
 				}
 			}
@@ -91,13 +91,13 @@ public abstract class WildWestLevel implements Level {
 		
 		touchEvents.removeAll(killEvents);
 		
-		for (int i = 0; i < cowboys.length; i++)
-			if (cowboys[i] != null) {
-				cowboys[i].doPhysics(currentTime);
+		for (int i = 0; i < cowboysArray.length; i++)
+			if (cowboysArray[i] != null) {
+				cowboysArray[i].doPhysics(currentTime);
 				
-				if (cowboys[i].getState() == com.iwildwest.cowboys.State.FINISH_STATE)
+				if (cowboysArray[i].getState() == com.iwildwest.cowboys.State.FINISH_STATE)
 				{
-					cowboys[i] = null;
+					cowboysArray[i] = null;
 					cowboysAtLevel--;
 				}
 			}
@@ -113,20 +113,20 @@ public abstract class WildWestLevel implements Level {
 	}
 
 	public void doSound(SoundManager soundManager) {
-		for (int i=0; i < cowboys.length; i++)
-			if (cowboys[i] != null) cowboys[i].doSound(soundManager);
+		for (int i=0; i < cowboysArray.length; i++)
+			if (cowboysArray[i] != null) cowboysArray[i].doSound(soundManager);
 	}
 
 	protected void addCowboy(long currentTime) {
-		int rand = (int) (Math.random() * (cowboys.length - cowboysAtLevel));
-		if (rand >= cowboys.length - cowboysAtLevel) rand = cowboys.length - cowboysAtLevel;
+		int rand = (int) (Math.random() * (cowboysArray.length - cowboysAtLevel));
+		if (rand >= cowboysArray.length - cowboysAtLevel) rand = cowboysArray.length - cowboysAtLevel;
 		
-		for (int i = 0; i < cowboys.length; i++) {
-			if (cowboys[i] != null) continue;
+		for (int i = 0; i < cowboysArray.length; i++) {
+			if (cowboysArray[i] != null) continue;
 			if (rand != 0)	rand--;
 			else 
 			{
-				cowboys[i] = cowboysCreator.getRandomCowboy(getCowboysLiveTime());
+				cowboysArray[i] = this.cowboys.getRandomCowboy(getCowboysLiveTime());
 				break;
 			}
 		}
@@ -136,8 +136,8 @@ public abstract class WildWestLevel implements Level {
 		lastAdded = currentTime;
 	}
 		
-	public void setCowboysCreator(CowboysCreator cowboysCreator) {
-		this.cowboysCreator = cowboysCreator;
+	public void setCowboys(Cowboys cowboys) {
+		this.cowboys = cowboys;
 	}
 
 	//----------------- System ----------------

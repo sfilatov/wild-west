@@ -19,8 +19,8 @@ public abstract class DoubleLayerLevel extends WildWestLevel {
     	if (backgroundImage != null) 
     		canvas.drawBitmap(backgroundImage, point.x, point.y, null);
 
-    	for(int i = 0; i < cowboys.length; i++) {
-    		if (cowboys[i] != null) 
+    	for(int i = 0; i < cowboysArray.length; i++) {
+    		if (cowboysArray[i] != null)
     			drawCowboy(canvas, i);
     	}
     	
@@ -29,7 +29,7 @@ public abstract class DoubleLayerLevel extends WildWestLevel {
 	}
 	
 	protected void drawCowboy(Canvas canvas, int i) {
-		cowboys[i].doDraw(canvas, cowboysPositions[i].getX(), cowboysPositions[i].getY(), cowboysPositions[i].getH(), cowboysPositions[i].getV());
+		cowboysArray[i].doDraw(canvas, cowboysPositions[i].getX(), cowboysPositions[i].getY(), cowboysPositions[i].getH(), cowboysPositions[i].getV());
 	}
 
 }

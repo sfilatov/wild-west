@@ -12,7 +12,7 @@ import android.view.animation.AnimationUtils;
 import android.widget.FrameLayout;
 import com.iwildwest.core.*;
 
-public class WildWestActivity extends Activity implements ExtendedContext, AnimationListener{
+public class WildWestActivity extends Activity implements Game, AnimationListener{
 	
 	private MainView mainView;
 
@@ -50,10 +50,8 @@ public class WildWestActivity extends Activity implements ExtendedContext, Anima
         fadeAnimation = AnimationUtils.loadAnimation(this, R.anim.fade);
         fadeAnimation.setAnimationListener(this);
 
-
         mainView = (MainView)View.inflate(this, R.layout.main_view, null);        
-        if (savedInstanceState != null) 
-        	mainView.restoreState(savedInstanceState);
+        if (savedInstanceState != null) mainView.restoreState(savedInstanceState);
         
 		splashView = (SplashView)View.inflate(this, R.layout.splash_view, null);
         splashView.setAnimation(fadeAnimation);

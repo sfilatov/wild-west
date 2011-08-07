@@ -52,14 +52,14 @@ public class MenuThread extends AbstractAnimationThread {
 
     private SoundManager soundManager;
     private PictureManager pictureManager;
-    private ExtendedContext context;
+    private Game context;
 
 
-    public MenuThread(SurfaceHolder holder, ExtendedContext extendedContext) {
+    public MenuThread(SurfaceHolder holder, Game game) {
         super(holder);
-        this.context = extendedContext;
+        this.context = game;
 
-        pictureManager = extendedContext.getPictureManager();
+        pictureManager = game.getPictureManager();
 
         background = pictureManager.getPicture(R.drawable.startmenu);
         playButton = pictureManager.getPicture(R.drawable.menu_play_game_text);
@@ -73,7 +73,7 @@ public class MenuThread extends AbstractAnimationThread {
         cursorImage = pictureManager.getPicture(R.drawable.menu_selecter);
 
 
-        soundManager = extendedContext.getSoundManager();
+        soundManager = game.getSoundManager();
 
     }
 

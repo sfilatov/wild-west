@@ -7,7 +7,7 @@ import android.view.MotionEvent;
 import com.iwildwest.core.Animated;
 import com.iwildwest.core.SoundManager;
 import com.iwildwest.core.Storable;
-import com.iwildwest.cowboys.CowboysCreator;
+import com.iwildwest.cowboys.Cowboys;
 
 public interface Level extends Storable, Animated {
 
@@ -20,9 +20,9 @@ public interface Level extends Storable, Animated {
 	
 	public void onTouchEvent(MotionEvent event);
 
-	public void setCowboysCreator(CowboysCreator cowboysCreator);
+	public void setCowboys(Cowboys cowboysCreator);
 	
-	public void setTouchEvents(Collection<MotionEvent> touchEvents);
+	public void onTouchEvents(Collection<MotionEvent> touchEvents);
 	
 	public void setState(int state);
 	

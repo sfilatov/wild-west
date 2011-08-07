@@ -1,6 +1,6 @@
 package com.iwildwest.core;
 
-public interface ExtendedContext {
+public interface Game {
 	SoundManager getSoundManager();
 	
 	PictureManager getPictureManager();

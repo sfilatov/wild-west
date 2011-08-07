@@ -5,14 +5,14 @@ import android.util.AttributeSet;
 import android.view.MotionEvent;
 
 import com.iwildwest.core.AbstractAnimationView;
-import com.iwildwest.core.ExtendedContext;
+import com.iwildwest.core.Game;
 import com.iwildwest.core.MenuThread;
 
 public class MenuView extends AbstractAnimationView<MenuThread> {
 
 	public MenuView(Context context, AttributeSet attrs) {
 		super(context, attrs);
-		setThread(new MenuThread(getSurfaceHolder(), (ExtendedContext) context));
+		setThread(new MenuThread(getSurfaceHolder(), (Game) context));
 	}
 
 	@Override

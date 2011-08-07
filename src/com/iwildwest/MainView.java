@@ -5,7 +5,7 @@ import android.os.Bundle;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import com.iwildwest.core.AbstractAnimationView;
-import com.iwildwest.core.ExtendedContext;
+import com.iwildwest.core.Game;
 import com.iwildwest.core.MainThread;
 
 public final class MainView extends AbstractAnimationView<MainThread>
@@ -15,7 +15,7 @@ public final class MainView extends AbstractAnimationView<MainThread>
         super(context, attrs);
         
         // create thread only; it's started in surfaceCreated()
-        setThread(new MainThread(getSurfaceHolder(), (ExtendedContext) context));
+        setThread(new MainThread(getSurfaceHolder(), (Game) context));
 	}
 	
 

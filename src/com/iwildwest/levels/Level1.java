@@ -11,46 +11,54 @@ import android.graphics.Rect;
 import android.view.MotionEvent;
 
 class Level1 extends DoubleLayerLevel {
-	public Level1(PictureManager pictureManager, LevelListener listener) {
-		super(listener);
+    public Level1(PictureManager pictureManager, LevelListener listener) {
+        super(listener);
 
-		backgroundImage = pictureManager.getPicture(R.drawable.level1);
-		buildingImage = pictureManager.getPicture(R.drawable.level1up);
+        backgroundImage = pictureManager.getPicture(R.drawable.level1);
+        buildingImage = pictureManager.getPicture(R.drawable.level1up);
 
-		cowboys = new Cowboy[3];
-		cowboysPositions = new CowboyPosition[3];
-		
-		cowboysPositions[0] = new CowboyPosition(110, 73, Cowboy.HORIZONTAL_CENTER, Cowboy.VERTICAL_TOP);
-		cowboysPositions[1] = new CowboyPosition(363, 73, Cowboy.HORIZONTAL_CENTER, Cowboy.VERTICAL_TOP);
-		cowboysPositions[2] = new CowboyPosition(240, 278, Cowboy.HORIZONTAL_CENTER, Cowboy.VERTICAL_BOTTOM);
-		
-		state = Level.STATE_STARTED;
-	}
 
-	@Override
-	protected Rect[] getKillZones() {
-		Rect[] killZones = new Rect[3];
-		
-		killZones[0] = new Rect(75, 65, 145, 121);
-		killZones[1] = new Rect(328, 65, 398, 121);
-		killZones[2] = new Rect(204, 181, 274, 278);
+        cowboysPositions = new CowboyPosition[] {
+                new CowboyPosition(110, 75, Cowboy.HORIZONTAL_CENTER, Cowboy.VERTICAL_TOP),
+                new CowboyPosition(363, 75, Cowboy.HORIZONTAL_CENTER, Cowboy.VERTICAL_TOP),
+                new CowboyPosition(240, 75, Cowboy.HORIZONTAL_CENTER, Cowboy.VERTICAL_TOP),
+                new CowboyPosition(240, 280, Cowboy.HORIZONTAL_CENTER, Cowboy.VERTICAL_BOTTOM),
+                new CowboyPosition(110, 280, Cowboy.HORIZONTAL_CENTER, Cowboy.VERTICAL_BOTTOM),
+                new CowboyPosition(363, 280, Cowboy.HORIZONTAL_CENTER, Cowboy.VERTICAL_BOTTOM),
 
-		return killZones;
-	}
+        };
 
-	@Override
-	public long getTimeBetweenCowboys() {
-		return 2000;
-	}
+        cowboysArray = new Cowboy[cowboysPositions.length];
 
-	@Override
-	public long getCowboysLiveTime() {
-		return 3000;
-	}
+        state = Level.STATE_STARTED;
+    }
 
-	public void onTouchEvent(MotionEvent event) {
-		// TODO Auto-generated method stub
-		
-	}
-	
+    @Override
+    protected Rect[] getKillZones() {
+        return new Rect[] {
+                new Rect(75, 65, 145, 121),
+                new Rect(328, 65, 398, 121),
+                new Rect(204, 65, 274, 121),
+                new Rect(204, 181, 274, 280),
+                new Rect(75, 181, 145, 278),
+                new Rect(328, 181, 398, 280)
+
+        };
+    }
+
+    @Override
+    public long getTimeBetweenCowboys() {
+        return 2000;
+    }
+
+    @Override
+    public long getCowboysLiveTime() {
+        return 3000;
+    }
+
+    public void onTouchEvent(MotionEvent event) {
+        // TODO Auto-generated method stub
+
+    }
+
 }

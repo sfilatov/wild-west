@@ -4,12 +4,9 @@ import java.util.NoSuchElementException;
 
 import com.iwildwest.core.PictureManager;
 import com.iwildwest.core.Storable;
-import com.iwildwest.cowboys.CowboysCreator;
-import com.iwildwest.cowboys.CowboysFactory;
-import com.iwildwest.levels.*;
 
-import android.content.res.Resources;
 import android.os.Bundle;
+import com.iwildwest.cowboys.Cowboys;
 
 /**
  * Contains all information about levels
@@ -25,12 +22,12 @@ public class Levels implements Storable{
 	private Level[] levels = new Level[LEVELS_COUNT];
 	private int currentLevel;
 	
-	public Levels(PictureManager pictureManager, CowboysCreator cowboysFactory, LevelListener listener) {
+	public Levels(PictureManager pictureManager, Cowboys cowboys, LevelListener listener) {
 		levels[0] = new Level1(pictureManager, listener);
-		levels[0].setCowboysCreator(cowboysFactory);
+		levels[0].setCowboys(cowboys);
 		
 		levels[1] = new Level2(pictureManager, listener);
-		levels[1].setCowboysCreator(cowboysFactory);
+		levels[1].setCowboys(cowboys);
 		
 		currentLevel = 0;
 	}

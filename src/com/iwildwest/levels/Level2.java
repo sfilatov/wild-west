@@ -18,7 +18,7 @@ class Level2 extends DoubleLayerLevel {
 		backgroundImage = pictureManager.getPicture(R.drawable.level2);
 		buildingImage = pictureManager.getPicture(R.drawable.level2up);
 
-		cowboys = new Cowboy[6];
+		cowboysArray = new Cowboy[6];
 		cowboysPositions = new CowboyPosition[6];
 
 		state = Level.STATE_STARTED;

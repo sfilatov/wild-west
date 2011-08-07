@@ -50,20 +50,16 @@ public class AbstractCowboy implements Cowboy {
 				int cx = dst.centerX();
 				dst.left = cx - (width >> 1);
 				dst.right = cx + (width >> 1);
-			}
-			else width = dst.width();
+			} else width = dst.width();
 			
 			if (currentImage.getHeight() < dst.height()) {
 				height = currentImage.getHeight();
 				int cy = dst.centerY();
 				dst.top = cy - (height >> 1);
 				dst.bottom = cy + (height >> 1);
-			}
-			else height = dst.height();
-			
-			Rect src = new Rect(0,0, width, height);
-			
-			canvas.drawBitmap(currentImage, src, dst, paint);
+			} else height = dst.height();
+
+            canvas.drawBitmap(currentImage, new Rect(0,0, width, height), dst, paint);
 		}
 	}
 	
@@ -147,19 +143,11 @@ public class AbstractCowboy implements Cowboy {
 	}
 
 	protected void substateIndexChanged(State state, int substate){
-		
 		if (substate >= currentAttributes.getSubstateCount()) {
 			substateIndex = 0;
-			
 			State next = getNextState(state);
-			
-			if (next != null ) {
-				currentAttributes = stateToAttributes.get(next);
-			} else {
-				currentAttributes = null;
-			}
-			
-		}  
+			currentAttributes = (next != null ? currentAttributes = stateToAttributes.get(next) : null);
+		}
 			
 	    setStartPlaySound(true);
 
@@ -169,14 +157,9 @@ public class AbstractCowboy implements Cowboy {
 		if (isStartPlaySound()) {
 			if (currentAttributes != null) {
 				Integer soundId = currentAttributes.getSound(substateIndex);
-				if (soundId != null)
-					soundManagerSound.playSound(soundId);
+				if (soundId != null) soundManagerSound.playSound(soundId);
 			}
 		}
 		setStartPlaySound(false);
 	}
-	
-	
-
-
 }
