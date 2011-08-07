@@ -15,23 +15,23 @@ import com.iwildwest.core.PictureManager;
 import com.iwildwest.core.SoundManager;
 import com.iwildwest.core.Storable;
 
-public class CracksFactory implements Animated, Storable{
+public class Cracks implements Animated, Storable{
 
-//	private CrackInformationHolder[] cracks;
+//	private CrackInformation[] cracks;
 //	private final int ZONES_COUNT = 12;
 //	private int cracksCount = 0;
 //	private boolean[] zonesPlaced = new boolean[ZONES_COUNT];
 //	public long CRACK_LIVE_TIME = 1000;
 	
 	private Bitmap[] cracksPictures;
-	private ArrayList<CrackInformationHolder> cracks;
+	private ArrayList<CrackInformation> cracks;
 	
 	private int screenHeight;
 	private int screenWidth;
 	
 	private SoundManager soundManager;
 	
-	public CracksFactory(PictureManager pictureManager, SoundManager soundManager) {
+	public Cracks(PictureManager pictureManager, SoundManager soundManager) {
 		cracksPictures = new Bitmap[] {
 				pictureManager.getPicture(R.drawable.crack1),				
 				pictureManager.getPicture(R.drawable.crack2),
@@ -41,11 +41,11 @@ public class CracksFactory implements Animated, Storable{
 		
 		this.soundManager = soundManager;
 		
-		cracks = new ArrayList<CrackInformationHolder>();
+		cracks = new ArrayList<CrackInformation>();
 		
-//		cracks = new CrackInformationHolder[size];
+//		cracks = new CrackInformation[size];
 //		for (int i = 0; i < cracks.length; i++) {
-//			cracks[i] = new CrackInformationHolder();
+//			cracks[i] = new CrackInformation();
 //			cracks[i].setStartDisplayingTime(-1);
 //		}
 	}
@@ -63,7 +63,7 @@ public class CracksFactory implements Animated, Storable{
 		
 		setupRandom(rect);
 		
-		for (CrackInformationHolder holder : cracks) {
+		for (CrackInformation holder : cracks) {
 			holder.doDraw(canvas);
 		}
 	}
@@ -102,7 +102,7 @@ public class CracksFactory implements Animated, Storable{
 //		zonesPlaced[j] = true;
 //		cracksCount++;
 		
-		CrackInformationHolder holder = new CrackInformationHolder();
+		CrackInformation holder = new CrackInformation();
 		holder.setPicture(getRandomCrackBitmap());
 		holder.setPosition(getRandomCrackPosition());		
 		cracks.add(holder);

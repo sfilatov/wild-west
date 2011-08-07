@@ -95,8 +95,7 @@ public class Timer implements Animated, Storable{
 	}
 	
 	public void setTimeInSeconds(long seconds) {
-		if (seconds > 99 && seconds < 0) 
-			throw new Error("Seconds must be greater than 0 but less than 100");
+		if (seconds > 99 && seconds < 0) throw new Error("Seconds must be greater than 0 but less than 100");
 		timerInMillis = seconds * SECOND_IN_MILLIS;
 	}
 	

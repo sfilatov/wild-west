@@ -18,7 +18,7 @@ public class WildWestActivity extends Activity implements ExtendedContext, Anima
 
 	private SimplePictureManager pictureManager;
 
-	private SoundPoolSoundManager soundManager;
+	private SoundManager soundManager;
 
 	private FrameLayout layout;
 
@@ -45,7 +45,7 @@ public class WildWestActivity extends Activity implements ExtendedContext, Anima
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
 		pictureManager = new SimplePictureManager(this.getResources());
-		soundManager = new SoundPoolSoundManager(this);
+		soundManager = new SoundManager(this);
         
         fadeAnimation = AnimationUtils.loadAnimation(this, R.anim.fade);
         fadeAnimation.setAnimationListener(this);

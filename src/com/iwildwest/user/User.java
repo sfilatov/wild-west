@@ -1,21 +1,15 @@
 package com.iwildwest.user;
 
-import java.lang.reflect.Field;
-
 import com.iwildwest.R;
 import com.iwildwest.core.Animated;
 import com.iwildwest.core.PictureManager;
-import com.iwildwest.core.SoundManager;
 import com.iwildwest.core.Storable;
 
-import android.content.res.Resources;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Point;
 import android.graphics.Rect;
 import android.os.Bundle;
-import android.util.Log;
 
 /**
  * 
@@ -53,6 +47,10 @@ public class User implements Animated, Storable{
 	public boolean isAlive() {
 		return lives > 0;
 	}
+
+    public boolean isDead(){
+        return !isAlive();
+    }
 	
 	public void resetLivesToMaximum() {
 		lives = MAX_LIVES;

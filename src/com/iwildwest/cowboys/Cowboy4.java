@@ -25,7 +25,7 @@ public class Cowboy4 extends AbstractCowboy {
 						R.drawable.cowboy4_light_animation_throw3 }));
 		putStateAttributes(new StateAttributes(State.DEAD_ANIMATION_STATE,
 				new long[] { PREPARE_TIMEOUT, SHORT_TIMEOUT, SHORT_TIMEOUT, SHORT_TIMEOUT }, 
-				new Integer[] { R.raw.enemy_dead3, null, null, null },
+				new Integer[] { R.raw.enemy_dead2, null, null, null },
 				new Integer[] {
 						R.drawable.cowboy4_light_animation_death1,
 						R.drawable.cowboy4_light_animation_death2,

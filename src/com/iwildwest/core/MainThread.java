@@ -4,16 +4,17 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
+import com.iwildwest.R;
 import com.iwildwest.buckle.Buckle;
 import com.iwildwest.cowboys.CowboyListener;
 import com.iwildwest.cowboys.CowboysCreator;
 import com.iwildwest.cowboys.CowboysFactory;
 import com.iwildwest.levels.Level;
 import com.iwildwest.levels.LevelListener;
-import com.iwildwest.levels.LevelsFactory;
+import com.iwildwest.levels.Levels;
 import com.iwildwest.timer.Timer;
 import com.iwildwest.timer.TimerListener;
-import com.iwildwest.user.CracksFactory;
+import com.iwildwest.user.Cracks;
 import com.iwildwest.user.SoundButton;
 import com.iwildwest.user.User;
 
@@ -42,8 +43,8 @@ public final class MainThread extends AbstractAnimationThread implements LevelLi
 	//private DrawThread draw;
 	
 	private List<MotionEvent> touches = Collections.synchronizedList(new LinkedList<MotionEvent>());
-	private LevelsFactory levelsFactory;
-	private CracksFactory cracksFactory;
+	private Levels levels;
+	private Cracks cracks;
 	private CowboysCreator cowboysFactory;
 	private User user;
 	private Buckle buckle;
@@ -66,8 +67,8 @@ public final class MainThread extends AbstractAnimationThread implements LevelLi
 		soundManager = extendedContext.getSoundManager();
 		
 		cowboysFactory = new CowboysFactory(pictureManager, this);
-		levelsFactory = new LevelsFactory(pictureManager, cowboysFactory, this);
-		cracksFactory = new CracksFactory(pictureManager, soundManager);
+		levels = new Levels(pictureManager, cowboysFactory, this);
+		cracks = new Cracks(pictureManager, soundManager);
 		user = new User(pictureManager);
 		buckle = new Buckle(pictureManager, soundManager);
 		soundButton = new SoundButton(pictureManager);
@@ -115,7 +116,12 @@ public final class MainThread extends AbstractAnimationThread implements LevelLi
 	
 	public void shouted() {
 		user.decreaseLive();
-		cracksFactory.addCrack();
+		cracks.addCrack();
+
+        if (user.isDead()) {
+            soundManager.stopLoopSound(R.raw.wildwest1);
+            soundManager.playSound(R.raw.youlose);
+        }
 	}
 
 //-----------------------Main Game Process----------------------------	
@@ -125,18 +131,19 @@ public final class MainThread extends AbstractAnimationThread implements LevelLi
     		restartTimer();
     		state = STATE_RUNNING;
 		}
-		
+
+        //TODO
 		if (!user.isAlive()) return;
 		
     	if (levelFinished) {
-    		levelsFactory.next();
+    		//levels.next();
     		levelFinished = false;
     		restartTimer();
     	}
     	
 		long now = System.currentTimeMillis();    	
-		levelsFactory.getCurrentLevel().setTouchEvents(touches);
-  		levelsFactory.getCurrentLevel().doPhysics(now);
+		levels.getCurrentLevel().setTouchEvents(touches);
+  		levels.getCurrentLevel().doPhysics(now);
   		touches.clear();
   		
     	user.doPhysics(now);
@@ -145,15 +152,10 @@ public final class MainThread extends AbstractAnimationThread implements LevelLi
     }
 
 	private void restartTimer() {
-		//TODO refactore timer restart
-		timer.setTimeInSeconds(10);
+		timer.setTimeInSeconds(99);
 		timer.start(System.currentTimeMillis());
 	}
 	
-	public void doSound() {
-		levelsFactory.getCurrentLevel().doSound(soundManager);
-	}
-    
     private boolean isPauseButtonZone(int x, int y) {
     	return false;
     }
@@ -170,16 +172,13 @@ public final class MainThread extends AbstractAnimationThread implements LevelLi
 	{
 //		synchronized (getHolder()) {
 			if (savedState != null) {
-				if (cowboysFactory == null) 
-					cowboysFactory = new CowboysFactory(pictureManager, this);
+				if (cowboysFactory == null) cowboysFactory = new CowboysFactory(pictureManager, this);
 				/**/
-				if (levelsFactory == null)
-					levelsFactory = new LevelsFactory(pictureManager, cowboysFactory, this);
-				levelsFactory.restoreState(savedState);
+				if (levels == null) levels = new Levels(pictureManager, cowboysFactory, this);
+				levels.restoreState(savedState);
 				
-				if (cracksFactory == null)
-					cracksFactory = new CracksFactory(pictureManager, soundManager);
-				cracksFactory.restoreState(savedState);
+				if (cracks == null) cracks = new Cracks(pictureManager, soundManager);
+				cracks.restoreState(savedState);
 			}
 			
 			buckle.restoreState(savedState);
@@ -190,8 +189,8 @@ public final class MainThread extends AbstractAnimationThread implements LevelLi
 
 	public Bundle saveState(Bundle map) {
 //		synchronized (getHolder()) {
-			levelsFactory.saveState(map);
-			cracksFactory.saveState(map);
+			levels.saveState(map);
+			cracks.saveState(map);
 			user.saveState(map);
 			buckle.saveState(map);
 			soundButton.saveState(map);
@@ -214,20 +213,17 @@ public final class MainThread extends AbstractAnimationThread implements LevelLi
 	public void doDraw(Canvas canvas) {
 		
 		if (user.isAlive()) {
-				Level level = levelsFactory.getCurrentLevel();
-				if (level != null) level.doDraw(canvas, new Rect(0,0, canvas.getWidth(), canvas.getHeight()),new Point(0,0));
+				Level level = levels.getCurrentLevel();
+				if (level != null) level.doDraw(canvas, new Rect(0,0, canvas.getWidth(), canvas.getHeight()), new Point(0,0));
 				
-				cracksFactory.doDraw(canvas, new Rect(0,0, canvas.getWidth(), canvas.getHeight()),new Point(0,0));
+				cracks.doDraw(canvas, new Rect(0,0, canvas.getWidth(), canvas.getHeight()), new Point(0,0));
 				
 				user.doDraw(canvas, USER_RECT, new Point(USER_RECT.left, USER_RECT.top));
 				soundButton.doDraw(canvas, SOUND_RECT, new Point(SOUND_RECT.left, SOUND_RECT.top));
 				buckle.doDraw(canvas, BUCKLE_RECT, new Point(BUCKLE_RECT.left, BUCKLE_RECT.top));
 				timer.doDraw(canvas, TIMER_RECT, new Point(TIMER_RECT.left, TIMER_RECT.top));
 		}
-		else {
-			//LOSE!
-		}
-		
+
 	}
 
 	@Override
@@ -235,41 +231,16 @@ public final class MainThread extends AbstractAnimationThread implements LevelLi
 		levelFinished = true;
 	}
 
-	/**
-	 * Main thread for drawing game layout
-	 *   
-	 * @author kodla
-	 */
-	/*
-	private class DrawThread extends Thread {
-		private boolean running = false;
-		
-		@Override
-		public void run() {
-			running = true;
-	 		
-			Log.w("{k:Draw Start}", Long.toString(System.currentTimeMillis()));
-			Canvas canvas = holder.lockCanvas();
+    @Override
+    public void start() {
+        super.start();
+        soundManager.playLoopSound(R.raw.wildwest1);
+    }
 
-			synchronized (holder) {
-				doDraw(canvas);
-			}
-			
-			holder.unlockCanvasAndPost(canvas);
-			Log.w("{k:Draw End}", Long.toString(System.currentTimeMillis()));
-			
-			running = false;
-		}
-		
-		public boolean isRunning() {
-			return running;
-		}
-		
-		private void doDraw(Canvas canvas) {
-			Level level = levelsFactory.getCurrentLevel();
-			if (level != null) level.doDraw(canvas);
-			
-			canvas.restore();
-		}
-	}*/
+    @Override
+    public void pause() {
+        super.pause();
+        soundManager.stopLoopSound(R.raw.wildwest1);
+    }
+
 }

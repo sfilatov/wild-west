@@ -9,7 +9,6 @@ import android.os.Bundle;
 import com.iwildwest.R;
 import com.iwildwest.core.Animated;
 import com.iwildwest.core.PictureManager;
-import com.iwildwest.core.SoundManager;
 import com.iwildwest.core.Storable;
 
 public class SoundButton implements Animated, Storable {

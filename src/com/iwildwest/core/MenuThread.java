@@ -50,35 +50,30 @@ public class MenuThread extends AbstractAnimationThread {
 
     private Rect cursorRect = ABOUT_RECT;
 
+    private SoundManager soundManager;
+    private PictureManager pictureManager;
     private ExtendedContext context;
+
 
     public MenuThread(SurfaceHolder holder, ExtendedContext extendedContext) {
         super(holder);
-
-        setTimeout(100);
-
         this.context = extendedContext;
 
-        background = extendedContext.getPictureManager().getPicture(
-                R.drawable.startmenu);
-        playButton = extendedContext.getPictureManager().getPicture(
-                R.drawable.menu_play_game_text);
-        settingsButton = extendedContext.getPictureManager().getPicture(
-                R.drawable.menu_settings_text);
-        highscoresButton = extendedContext.getPictureManager().getPicture(
-                R.drawable.high_scores_menu);
-        aboutButton = extendedContext.getPictureManager().getPicture(
-                R.drawable.menu_about_text);
-        soundonButton = extendedContext.getPictureManager().getPicture(
-                R.drawable.menu_sound_on);
-        soundoffButton = extendedContext.getPictureManager().getPicture(
-                R.drawable.menu_sound_off);
-        backButton = extendedContext.getPictureManager().getPicture(
-                R.drawable.menu_text_back);
-        aboutText = extendedContext.getPictureManager().getPicture(
-                R.drawable.menutext_about);
-        cursorImage = extendedContext.getPictureManager().getPicture(
-                R.drawable.menu_selecter);
+        pictureManager = extendedContext.getPictureManager();
+
+        background = pictureManager.getPicture(R.drawable.startmenu);
+        playButton = pictureManager.getPicture(R.drawable.menu_play_game_text);
+        settingsButton = pictureManager.getPicture(R.drawable.menu_settings_text);
+        highscoresButton = pictureManager.getPicture(R.drawable.high_scores_menu);
+        aboutButton = pictureManager.getPicture(R.drawable.menu_about_text);
+        soundonButton = pictureManager.getPicture(R.drawable.menu_sound_on);
+        soundoffButton = pictureManager.getPicture(R.drawable.menu_sound_off);
+        backButton = pictureManager.getPicture(R.drawable.menu_text_back);
+        aboutText = pictureManager.getPicture(R.drawable.menutext_about);
+        cursorImage = pictureManager.getPicture(R.drawable.menu_selecter);
+
+
+        soundManager = extendedContext.getSoundManager();
 
     }
 
@@ -110,51 +105,43 @@ public class MenuThread extends AbstractAnimationThread {
 
     }
 
-    public void doSound() {
-
-    }
-
     public boolean onTouchEvent(MotionEvent event) {
 
         switch (currentMenu) {
             case PLAY_MENU:
                 if (ABOUT_RECT.contains((int)event.getX(), (int)event.getY())) {
+                    soundManager.playSound(R.raw.menu_sound_in);
                     currentMenu = ABOUT_MENU;
-                    context.getSoundManager().playSound(R.raw.menu_sound_in);
                     cursorRect = null;
                 } else if (SETTINGS_RECT.contains((int)event.getX(), (int)event.getY())){
+                    soundManager.playSound(R.raw.menu_sound_in);
                     currentMenu = SETTINGS_MENU;
-                    context.getSoundManager().playSound(R.raw.menu_sound_in);
-                    if (context.getSoundManager().isEnabled())
-                        cursorRect = SOUNDON_RECT;
-                    else
-                        cursorRect = SOUNDOF_RECT;
+                    cursorRect = soundManager.isEnabled() ? SOUNDON_RECT : SOUNDOF_RECT;
                 } else if (PLAY_RECT.contains((int)event.getX(), (int)event.getY())) {
                     context.startGame();
-                    context.getSoundManager().playSound(R.raw.menu_sound_in);
                     cursorRect = PLAY_RECT;
                 } else if (HIGHSCORES_RECT.contains((int)event.getX(), (int)event.getY())) {
-                    //TODO
-                    context.getSoundManager().playSound(R.raw.menu_sound_in);
+                    soundManager.playSound(R.raw.menu_sound_in);
                     cursorRect = HIGHSCORES_RECT;
                 }
                 break;
             case SETTINGS_MENU:
                 if (SOUNDON_RECT.contains((int)event.getX(), (int)event.getY())) {
-                    context.getSoundManager().on();
-                    context.getSoundManager().playSound(R.raw.menu_sound_in);
+                    soundManager.on();
+                    soundManager.playSound(R.raw.menu_sound_in);
                     cursorRect = SOUNDON_RECT;
                 } else if (SOUNDOF_RECT.contains((int)event.getX(), (int)event.getY())) {
-                    context.getSoundManager().off();
+                    soundManager.off();
                     cursorRect = SOUNDOF_RECT;
                 } else if (BACK_RECT.contains((int)event.getX(), (int)event.getY())) {
+                    soundManager.playSound(R.raw.menu_sound_in);
                     currentMenu = PLAY_MENU;
-                    context.getSoundManager().playSound(R.raw.menu_sound_in);
                     cursorRect = SETTINGS_RECT;
                 }
                 break;
             case ABOUT_MENU:
                 if (ABOUTTEXT_RECT.contains((int)event.getX(), (int)event.getY())) {
+                    soundManager.playSound(R.raw.menu_sound_in);
                     currentMenu = PLAY_MENU;
                     cursorRect = ABOUT_RECT;
                 }
@@ -164,4 +151,14 @@ public class MenuThread extends AbstractAnimationThread {
         return true;
     }
 
+
+    public void pause(){
+        super.pause();
+        soundManager.stopLoopSound(R.raw.ships);
+    }
+
+    public void start(){
+        super.start();
+        soundManager.playLoopSound(R.raw.ships);
+    }
 }

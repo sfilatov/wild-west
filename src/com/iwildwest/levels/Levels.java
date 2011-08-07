@@ -15,7 +15,7 @@ import android.os.Bundle;
  * Contains all information about levels
  * @author kodla
  */
-public class LevelsFactory implements Storable{
+public class Levels implements Storable{
 	public static final int LEVELS_COUNT = 2;
 	
 	//Bundle Keys
@@ -25,7 +25,7 @@ public class LevelsFactory implements Storable{
 	private Level[] levels = new Level[LEVELS_COUNT];
 	private int currentLevel;
 	
-	public LevelsFactory(PictureManager pictureManager, CowboysCreator cowboysFactory, LevelListener listener) {
+	public Levels(PictureManager pictureManager, CowboysCreator cowboysFactory, LevelListener listener) {
 		levels[0] = new Level1(pictureManager, listener);
 		levels[0].setCowboysCreator(cowboysFactory);
 		

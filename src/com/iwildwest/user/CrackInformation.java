@@ -4,7 +4,7 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Point;
 
-public class CrackInformationHolder {
+public class CrackInformation {
 
 	private Bitmap picture;
 	private Point position;
