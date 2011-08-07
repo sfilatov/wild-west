@@ -40,31 +40,4 @@ public final class SimplePictureManager implements PictureManager {
 			bitmap.recycle();
 		}
 	}
-
-/*
- * 	private SortedMap<Integer, Bitmap> loadDrawableConstants() {
-		SortedMap<Integer, Bitmap> map = new TreeMap<Integer, Bitmap>();
-
-
-		Field fields[] = R.drawable.class.getFields();
-		
-		for (Field f : fields) {
-		
-			int modifiers = f.getModifiers();
-			
-			if (Modifier.isPublic(modifiers) && Modifier.isStatic(modifiers)
-					&& f.getType().equals(Integer.TYPE)) {
-
-				try {
-					int value = f.getInt(null); 
-					map.put(value, BitmapFactory.decodeResource(resources, value));
-				} catch (Exception error) {
-					Log.e(TAG, "Error accesing constants");
-				}
-			}
-		}
-
-		return Collections.unmodifiableSortedMap(map);
-	}
-	*/
 }

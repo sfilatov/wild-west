@@ -1,5 +1,6 @@
 package com.iwildwest.buckle;
 
+import android.util.Log;
 import com.iwildwest.R;
 import com.iwildwest.core.Animated;
 import com.iwildwest.core.PictureManager;
@@ -28,6 +29,8 @@ public final class Buckle implements Animated, Storable {
 
     private int bullets;
     private int animateBullets;
+
+    private final Object marker = new Object();
 
     private final Bitmap startBucklePicture;
     private final Bitmap rotateBucklePicture;
@@ -66,15 +69,18 @@ public final class Buckle implements Animated, Storable {
     public void doDraw(Canvas canvas, Rect rect, Point point) {
         canvas.drawBitmap(currentBucklePicture, point.x, point.y, null);
 
-        for (int i = (6 - animateBullets - 1)*2 ; i >= (6 - bullets - animateBullets) * 2; i -= 2) {
-            canvas.drawBitmap(bulletPicture, point.x + currentBulletPositions[i], point.y + currentBulletPositions[i + 1], null);
+        try {
+            for (int i = (6 - animateBullets - 1)*2 ; i >= (6 - bullets - animateBullets) * 2; i -= 2) {
+                canvas.drawBitmap(bulletPicture, point.x + currentBulletPositions[i], point.y + currentBulletPositions[i + 1], null);
+            }
+        } catch(ArrayIndexOutOfBoundsException e) {
+            Log.e(Buckle.class.toString(), "Array out of bounds AnimateBullets: " + animateBullets + ", Bullets: " + bullets);
         }
 
     }
 
     public void doPhysics(long now) {
-        if (currentAngle == START_ANGLE && animateBullets == 0)
-            return;
+        if (currentAngle == START_ANGLE && animateBullets <= 0) return;
 
         if (lastUpdateTime == 0) lastUpdateTime = now;
 
@@ -87,7 +93,9 @@ public final class Buckle implements Animated, Storable {
                 currentAngle = START_ANGLE;
                 currentBucklePicture = startBucklePicture;
                 currentBulletPositions = START_BULLET_POSITIONS;
-                animateBullets--;
+                synchronized (marker) {
+                    animateBullets--;
+                }
             }
             lastUpdateTime = now;
         }
@@ -96,13 +104,17 @@ public final class Buckle implements Animated, Storable {
     public void reload() {
         if (bullets == MAX_BULLETS) return;
         bullets = MAX_BULLETS;
-        animateBullets = 0;
+        synchronized (marker) {
+            animateBullets = 0;
+        }
         soundManager.playSound(R.raw.player_reload_pistol);
     }
 
     public boolean shoot() {
         if (bullets > 0) {
-            animateBullets++;
+            synchronized (marker) {
+                animateBullets ++;
+            }
             bullets--;
             soundManager.playSound(R.raw.player_shot_pistol);
             return true;

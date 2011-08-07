@@ -18,14 +18,14 @@ public final class SoundManager {
 
     private Context context;
     private SoundPool soundPool;
-    private Map<Integer, Integer> soundPoolMap;
+    private TreeMap<Integer, Integer> soundPoolMap;
     private HashMap<Integer, MediaPlayer> mediaPlayerMap;
 
     private boolean enabled = true;
 
     public SoundManager(Context context) {
         this.context = context;
-        soundPoolMap = loadRawConstants(getSoundPool());
+        soundPoolMap = new TreeMap<Integer, Integer>();
         mediaPlayerMap = new HashMap<Integer, MediaPlayer>();
     }
 
@@ -34,20 +34,27 @@ public final class SoundManager {
         return soundPool;
     }
 
-    public void playSound(int sound) {
+    public void playSound(int resourceId) {
         if (!enabled) return;
 
         AudioManager mgr = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
         int streamVolume = mgr.getStreamVolume(AudioManager.STREAM_MUSIC);
 
-        Integer soundId = soundPoolMap.get(sound);
-        if (soundId != null) getSoundPool().play(soundId, streamVolume, streamVolume, 1, 0, 1f);
+        getSoundPool().play(loadSound(resourceId), streamVolume, streamVolume, 1, 0, 1f);
     }
 
     public void stopSound(int sound) {
         Integer soundId = soundPoolMap.get(sound);
         if (soundId != null) getSoundPool().pause(soundId);
     }
+
+    private Integer loadSound(int resourceId){
+        if (!soundPoolMap.containsKey(resourceId))
+            soundPoolMap.put(resourceId, getSoundPool().load(context, resourceId, 1));
+
+        return soundPoolMap.get(resourceId);
+    }
+
 
     public void playLoopSound(int resourceId) {
         stopLoopSound(resourceId);
@@ -69,14 +76,14 @@ public final class SoundManager {
         }
     }
 
-    public void on(){
+    public void on() {
         this.enabled = true;
         for (MediaPlayer player : mediaPlayerMap.values()) {
             player.start();
         }
     }
 
-    public void off(){
+    public void off() {
         this.enabled = false;
         for (MediaPlayer player : mediaPlayerMap.values()) {
             player.pause();
@@ -87,20 +94,20 @@ public final class SoundManager {
         return enabled;
     }
 
-    private SortedMap<Integer, Integer> loadRawConstants(SoundPool soundPool) {
-        TreeMap<Integer, Integer> map = new TreeMap<Integer, Integer>();
-        for (Field f : R.raw.class.getFields()) {
-            int modifiers = f.getModifiers();
-            if (Modifier.isPublic(modifiers) && Modifier.isStatic(modifiers) && f.getType().equals(Integer.TYPE)) {
-                try {
-                    int value = f.getInt(null);
-                    map.put(value, soundPool.load(context, value, 1));
-                } catch (Exception error) {
-                    Log.e(TAG, "Error accessing constants");
-                }
-            }
-        }
-        return Collections.unmodifiableSortedMap(map);
-    }
+//    private SortedMap<Integer, Integer> loadRawConstants(SoundPool soundPool) {
+//        TreeMap<Integer, Integer> map = new TreeMap<Integer, Integer>();
+//        for (Field f : R.raw.class.getFields()) {
+//            int modifiers = f.getModifiers();
+//            if (Modifier.isPublic(modifiers) && Modifier.isStatic(modifiers) && f.getType().equals(Integer.TYPE)) {
+//                try {
+//                    int value = f.getInt(null);
+//                    map.put(value, soundPool.load(context, value, 1));
+//                } catch (Exception error) {
+//                    Log.e(TAG, "Error accessing constants");
+//                }
+//            }
+//        }
+//        return Collections.unmodifiableSortedMap(map);
+//    }
 
 }

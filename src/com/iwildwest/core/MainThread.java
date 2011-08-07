@@ -45,17 +45,14 @@ public final class MainThread extends AbstractAnimationThread implements LevelLi
     private boolean paused;
     private Timer timer;
 
-    public MainThread(SurfaceHolder holder, Game game)
-    {
+    public MainThread(SurfaceHolder holder, Game game) {
         super(holder);
 
         pictureManager = game.getPictureManager();
         soundManager = game.getSoundManager();
-
-        init();
     }
 
-    private void init(){
+    private void init() {
         cowboys = new Cowboys(pictureManager, this);
         levels = new Levels(pictureManager, cowboys, this);
         cracks = new Cracks(pictureManager, soundManager);
@@ -132,11 +129,6 @@ public final class MainThread extends AbstractAnimationThread implements LevelLi
     public void doPhysics() {
 
         if (user.isDead()) return;
-
-        if (levelFinished) {
-            levelFinished = false;
-            restartTimer();
-        }
 
         long now = System.currentTimeMillis();
         levels.getCurrentLevel().onTouchEvents(touches);
@@ -218,6 +210,7 @@ public final class MainThread extends AbstractAnimationThread implements LevelLi
 
     @Override
     public void start() {
+        init();
         super.start();
         restart();
     }

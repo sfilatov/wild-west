@@ -37,14 +37,8 @@ public class SoundButton implements Animated, Storable {
 	}
 
 	public void doDraw(Canvas canvas, Rect rect, Point point) {
-		Bitmap currentBitmap;
-		if (enabled)
-			currentBitmap = pictureManager.getPicture(R.drawable.sound_on);
-		else
-			currentBitmap = pictureManager.getPicture(R.drawable.sound_off);
-		
-		if (currentBitmap != null)
-			canvas.drawBitmap(currentBitmap, point.x, point.y, null);
+		Bitmap currentBitmap = pictureManager.getPicture( enabled ? R.drawable.sound_on : R.drawable.sound_off);
+		if (currentBitmap != null) canvas.drawBitmap(currentBitmap, point.x, point.y, null);
 	}
 
 	public boolean isEnabled() {
