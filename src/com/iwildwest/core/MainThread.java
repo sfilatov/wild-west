@@ -28,7 +28,7 @@ import android.view.SurfaceHolder;
 public final class MainThread extends AbstractAnimationThread implements LevelListener, CowboyListener, TimerListener {
 	//CONSTANTS
 	//Game State
-	public static final int STATE_ONSTART = 0;
+	public static final int STATE_INITIAL = 0;
 	public static final int STATE_RUNNING = 1; 
 	public static final int STATE_PAUSE = 2; 
 
@@ -38,7 +38,7 @@ public final class MainThread extends AbstractAnimationThread implements LevelLi
 	private static final Rect SOUND_RECT = new Rect(0, 0, 59, 51);
 	private static final Rect TIMER_RECT = new Rect(200, 0, 272, 44);
 
-	private int state = STATE_ONSTART;
+	private int state = STATE_INITIAL;
 	
 	//private DrawThread draw;
 	
@@ -72,11 +72,12 @@ public final class MainThread extends AbstractAnimationThread implements LevelLi
 		user = new User(pictureManager);
 		buckle = new Buckle(pictureManager, soundManager);
 		soundButton = new SoundButton(pictureManager);
+        soundButton.setEnabled(soundManager.isEnabled());
+
 		timer = new Timer(pictureManager, this);
 		
 		levelFinished = false;
-		state = STATE_ONSTART;
-		
+		state = STATE_INITIAL;
 	}
 	
 //------------------------- Event Listeners ------------------------
@@ -102,8 +103,10 @@ public final class MainThread extends AbstractAnimationThread implements LevelLi
 		if (isSoundZone(eventX, eventY)) {
             if (soundManager.isEnabled()) {
                 soundManager.off();
+                soundButton.setEnabled(false);
             } else {
                 soundManager.on();
+                soundButton.setEnabled(true);
             }
 			return true;
 		}
@@ -127,7 +130,7 @@ public final class MainThread extends AbstractAnimationThread implements LevelLi
 //-----------------------Main Game Process----------------------------	
 	public void doPhysics() {
 		
-		if (state == STATE_ONSTART) {
+		if (state == STATE_INITIAL) {
     		restartTimer();
     		state = STATE_RUNNING;
 		}
